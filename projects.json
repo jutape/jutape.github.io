@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Jode Site",
+        "url": "https://github.com/jutape/jode-site",
+        "description": {
+            "pt": "💍Meu site de casamento.",
+            "en": "💍My Wedding Site."
+        },
+        "technologies": ["Angular", "Javascript", "Typescript", "CSS"]
+    },
+    {
+        "name": "Jode Api",
+        "url": "https://github.com/jutape/jodeApi",
+        "description": {
+            "pt": "⚙️ API do JodeSite (site de casamento) responsável pela gestão dos presentes e das confirmações de presença.",
+            "en": "⚙️ JodeSite API (wedding website) responsible for managing gifts and RSVP confirmations."
+        },
+        "technologies": ["Java", "Hibernate", "Spring", "MySQL", "REST"]
+    },
+    {
+        "name": "Public Whatsapp",
+        "url": "https://github.com/jutape/publicwp",
+        "description": {
+            "pt": "💬 WhatsApp público utilizado para testes com Socket.IO.",
+            "en": "💬 Public WhatsApp used for testing with Socket.IO."
+        },
+        "technologies": ["Javascript", "CSS", "HTML", "Socket.io"]
+    },
+    {
+        "name": "Email sender",
+        "url": "https://github.com/jutape/email-sender",
+        "description": {
+            "pt": "📧 API para envio de e-mails utilizando o protocolo SMTP.",
+            "en": "📧 Email sending API via SMTP."
+        },
+        "technologies": ["Javascript", "SMTP", "REST"]
+    }
+]

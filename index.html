@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jutape</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- CDN do Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Metropolis', 'sans-serif'],
+                        signature: ['Great Vibes', 'cursive'], // Fonte para a assinatura
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Importar as fontes */
+        @import url('https://fonts.cdnfonts.com/css/metropolis');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        /* Estilo da borda e fundo */
+        .box-border {
+            width: 100vw;
+            height: 100vh;
+            border: 15px solid transparent;
+            outline: 2px solid #fff;
+            outline-offset: -10px;
+            background:
+                conic-gradient(from 90deg at 2px 2px, transparent 25%, #fff 0) 0 0/calc(100% - 2px) calc(100% - 2px) padding-box border-box;
+        }
+
+        /* Input invisível com cursor piscando */
+        .invisible-input {
+            background: transparent;
+            border: none;
+            color: white;
+            caret-color: white;
+            outline: none;
+            width: 200px;
+            font-weight: 300;
+            /* Fonte mais fina */
+        }
+
+        /* Cursor piscando */
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blinking-cursor::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 1em;
+            background: white;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            margin-left: 2px;
+        }
+
+        /* Estilização da barra de rolagem */
+        /* Para navegadores baseados em WebKit */
+        .scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Ocultar a barra de rolagem quando não está em uso */
+        .scrollbar {
+            scrollbar-width: thin;
+            /* Firefox */
+            scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+            /* Firefox */
+        }
+
+        .scrollbar:hover {
+            scrollbar-color: rgba(255, 255, 255, 0.7) transparent;
+            /* Firefox */
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            background-color: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            text-align: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+
+            /* Posição do tooltip */
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            right: 110%;
+            transform: translateY(-50%);
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+        }
+
+        /* Responsividade */
+        @media (max-width: 640px) {
+            .box-border {
+                border-width: 10px;
+            }
+
+            .invisible-input {
+                width: 150px;
+            }
+
+            .font-signature {
+                font-size: 2.5rem;
+            }
+
+            #resetButton {
+                text-sm;
+            }
+
+            /* Ajuste dos ícones em telas menores */
+            #socialIcons {
+                top: 2px;
+                right: 2px;
+            }
+        }
+
+        /* Estilo dos projetos */
+        .project-item {
+            padding: 8px;
+            margin-bottom: 16px;
+            transition: all 0.5s;
+            border: 1px solid #fff0;
+        }
+
+        .project-item:hover {
+            border-color: #ffff;
+        }
+
+        /* Ajuste do overflow para o contêiner da carta */
+        #letterContentWrapper {
+            max-height: 80vh;
+            flex-grow: 1;
+        }
+
+        /* Ajuste de scroll se necessário */
+        #projectsContainer {
+            max-height: 80vh;
+            width: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-black font-sans relative">
+    <!-- Ícones Sociais -->
+    <div
+        class="absolute flex bottom-6 right-6 space-x-4 md:flex-col md:top-6 md:right-6 md:space-y-4 md:space-x-0 z-50">
+        <!-- LinkedIn Icon -->
+        <div class="tooltip">
+            <a href="https://www.linkedin.com/in/jutape" target="_blank" aria-label="LinkedIn">
+                <svg class="w-6 h-6 text-white hover:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 8a6 6 0 016 6v6h-4v-6a2 2 0 00-4 0v6h-4v-6a6 6 0 016-6z" />
+                    <path d="M2 9h4v12H2z" />
+                    <circle cx="4" cy="4" r="2" />
+                </svg>
+            </a>
+            <span class="tooltip-text">LinkedIn</span>
+        </div>
+        <!-- GitHub Icon -->
+        <div class="tooltip">
+            <a href="https://github.com/jutape" target="_blank" aria-label="GitHub">
+                <svg class="w-6 h-6 text-white hover:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.477 2 2 6.484 2 12.012c0 4.43 2.867 8.19 6.839 9.504.5.091.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.603-3.369-1.344-3.369-1.344-.454-1.155-1.11-1.464-1.11-1.464-.908-.622.069-.609.069-.609 1.003.072 1.531 1.032 1.531 1.032.892 1.528 2.341 1.087 2.91.832.091-.647.35-1.086.636-1.336-2.22-.253-4.555-1.113-4.555-4.948 0-1.093.39-1.987 1.029-2.685-.103-.253-.446-1.27.098-2.645 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.6 9.6 0 012.5.336c1.91-1.294 2.748-1.025 2.748-1.025.545 1.375.202 2.392.1 2.645.64.698 1.028 1.592 1.028 2.685 0 3.844-2.338 4.692-4.566 4.94.36.31.68.92.68 1.852 0 1.336-.012 2.417-.012 2.744 0 .267.18.576.688.479A10.01 10.01 0 0022 12.012C22 6.484 17.522 2 12 2z" />
+                </svg>
+            </a>
+            <span class="tooltip-text">GitHub</span>
+        </div>
+        <!-- CV Download Icon -->
+        <div class="tooltip">
+            <a id="cvDownloadLink" href="#" target="_blank" aria-label="Download CV">
+                <svg class="w-6 h-6 text-white hover:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 16v2h16v-2H4zm7-10v6H8l4 4 4-4h-3V6h-2z" />
+                </svg>
+            </a>
+            <span class="tooltip-text">Currículo</span>
+        </div>
+    </div>
+
+    <div class="box-border flex items-center justify-center">
+        <!-- Contêiner Principal -->
+        <div class="w-full h-full flex items-center justify-center">
+            <!-- Contêiner de Conteúdo -->
+            <div id="contentContainer" class="w-full max-w-6xl p-4 sm:p-8 text-white">
+                <!-- Etapa 1: Selecionar Idioma -->
+                <div id="step1" class="w-full text-center hidden opacity-0 transition-opacity duration-500 ">
+                    <h2 id="selectLanguageTitle" class="text-2xl font-light mb-6">Selecione o Idioma</h2>
+                    <div class="flex md:w-1/2 justify-around m-auto">
+                        <button id="btnPortuguese"
+                            class="w-32 h-12 bg-transparent text-white border border-white rounded font-light">Português</button>
+                        <button id="btnEnglish"
+                            class="w-32 h-12 bg-transparent text-white border border-white rounded font-light">English</button>
+                    </div>
+                </div>
+
+                <!-- Etapa 2: Perguntar o Nome -->
+                <div id="step2" class="w-full md:w-1/2 m-auto hidden opacity-0 transition-opacity duration-500">
+                    <div class="flex items-center text-2xl font-light">
+                        <span id="nameLabel">Seu nome é&nbsp;</span>
+                        <input type="text" id="nameInput" class="invisible-input blinking-cursor" autofocus>
+                    </div>
+                </div>
+
+                <!-- Etapa 3: Mostrar Carta e Projetos -->
+                <div id="step3" class="w-full hidden opacity-0 transition-opacity duration-500">
+                    <!-- Contêiner para conteúdo da carta e projetos -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Contêiner da Carta -->
+                        <div id="letterContentWrapper" class="overflow-y-auto scrollbar p-4 md:w-1/2"
+                            style="max-height: 80vh; flex-grow: 1; ">
+                            <div id="letterContent" class="text-white font-light text-lg leading-relaxed"></div>
+                        </div>
+                        <!-- Contêiner dos Projetos -->
+                        <div id="projectsContainer" class="p-4 w-1/2 scrollbar hidden md:block">
+                            <!-- Lista de Projetos -->
+                            <!-- Os projetos serão inseridos aqui via JavaScript -->
+                        </div>
+                    </div>
+
+                    <button id="resetButton"
+                        class="mt-4 text-sm text-gray-400 hover:text-gray-200 bg-transparent border-none font-light">Resetar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript para manipular as etapas e transições -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+
+            const btnPortuguese = document.getElementById('btnPortuguese');
+            const btnEnglish = document.getElementById('btnEnglish');
+
+            const nameInput = document.getElementById('nameInput');
+            const nameLabel = document.getElementById('nameLabel');
+            const selectLanguageTitle = document.getElementById('selectLanguageTitle');
+
+            let selectedLanguage = localStorage.getItem('selectedLanguage') || null;
+            let name = localStorage.getItem('name') || '';
+
+            const languageFiles = {
+                'pt': './portuguese.json',
+                'en': './english.json'
+            };
+
+            let languageData = {};
+
+            // Função para carregar o arquivo JSON do idioma
+            function loadLanguageFile(lang, callback) {
+                fetch(languageFiles[lang])
+                    .then(response => response.json())
+                    .then(data => {
+                        languageData = data;
+                        if (callback) callback();
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar o arquivo de idioma:', error);
+                    });
+            }
+
+            // Garantir que as etapas estejam ocultas inicialmente
+            step1.classList.add('hidden', 'opacity-0');
+            step2.classList.add('hidden', 'opacity-0');
+            step3.classList.add('hidden', 'opacity-0');
+
+            if (selectedLanguage && name) {
+                // Carregar o arquivo de idioma e ir para a etapa 3
+                loadLanguageFile(selectedLanguage, () => {
+                    updateStep3Language();
+                    step3.classList.remove('hidden');
+                    fadeIn(step3);
+                });
+            } else if (selectedLanguage) {
+                // Carregar o arquivo de idioma e ir para a etapa 2
+                loadLanguageFile(selectedLanguage, () => {
+                    updateStep2Language();
+                    step2.classList.remove('hidden');
+                    fadeIn(step2);
+                    nameInput.focus();
+                });
+            } else {
+                // Começar na etapa 1
+                step1.classList.remove('hidden');
+                fadeIn(step1);
+            }
+
+            btnPortuguese.addEventListener('click', function () {
+                selectedLanguage = 'pt';
+                localStorage.setItem('selectedLanguage', selectedLanguage);
+                loadLanguageFile(selectedLanguage, transitionToStep2);
+            });
+
+            btnEnglish.addEventListener('click', function () {
+                selectedLanguage = 'en';
+                localStorage.setItem('selectedLanguage', selectedLanguage);
+                loadLanguageFile(selectedLanguage, transitionToStep2);
+            });
+
+            nameInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    transitionToStep3();
+                }
+            });
+
+            nameInput.addEventListener('input', function () {
+                // Impedir espaços no input
+                this.value = this.value.replace(/\s/g, '');
+            });
+
+            function transitionToStep2() {
+                fadeOut(step1, function () {
+                    step1.classList.add('hidden');
+                    updateStep2Language();
+                    step2.classList.remove('hidden');
+                    fadeIn(step2);
+                    nameInput.focus();
+                });
+            }
+
+            function updateStep2Language() {
+                // Atualizar textos da etapa 2
+                nameLabel.innerHTML = languageData.namePrompt + '&nbsp;';
+            }
+
+            function transitionToStep3() {
+                name = nameInput.value.trim();
+
+                if (name === '') {
+                    // Se o nome estiver vazio, não faça nada
+                    return;
+                }
+
+                localStorage.setItem('name', name);
+
+                updateStep3Language();
+
+                fadeOut(step2, function () {
+                    step2.classList.add('hidden');
+                    step3.classList.remove('hidden');
+                    fadeIn(step3);
+                });
+            }
+
+            function updateStep3Language() {
+                name = localStorage.getItem('name') || name;
+
+                const letterContentElement = document.getElementById('letterContent');
+
+                let letterHTML = '';
+
+                // Substituir [NamePlaceholder] pelo nome
+                letterHTML = languageData.letter.replace(/\[NamePlaceholder\]/g, name);
+
+                letterContentElement.innerHTML = letterHTML;
+
+                // Atualizar o texto do botão "Resetar"
+                document.getElementById('resetButton').textContent = languageData.resetButton;
+
+                // Adicionar o listener para o botão reset aqui
+                const resetButton = document.getElementById('resetButton');
+                resetButton.addEventListener('click', function () {
+                    localStorage.clear();
+                    location.reload();
+                });
+
+                // Atualizar o link de download do currículo
+                const cvDownloadLink = document.getElementById('cvDownloadLink');
+                const cvTooltip = cvDownloadLink.parentElement.querySelector('.tooltip-text');
+                if (selectedLanguage === 'pt') {
+                    cvDownloadLink.href = './resume.pdf'; // Substitua pelo caminho do seu currículo em português
+                    cvTooltip.textContent = 'Currículo';
+                } else if (selectedLanguage === 'en') {
+                    cvDownloadLink.href = './resume.pdf'; // Substitua pelo caminho do seu currículo em inglês
+                    cvTooltip.textContent = 'Resume';
+                }
+
+                loadProjects();
+            }
+
+            function loadProjects() {
+                fetch('projects.json')
+                    .then(response => response.json())
+                    .then(projects => {
+                        displayProjects(projects);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar os projetos:', error);
+                    });
+            }
+
+            function displayProjects(projects) {
+                const projectsContainer = document.getElementById('projectsContainer');
+                projectsContainer.innerHTML = ''; // Limpar conteúdo anterior
+
+                projects.forEach(project => {
+                    // Criar o elemento do projeto
+                    const projectElement = document.createElement('div');
+                    projectElement.classList.add('project-item', 'mb-4', 'text-white');
+
+                    // Link do projeto
+                    const projectLink = document.createElement('a');
+                    projectLink.href = project.url;
+                    projectLink.target = '_blank';
+                    projectLink.classList.add('font-semibold', 'hover:underline');
+                    projectLink.textContent = project.name;
+
+                    // Descrição do projeto
+                    const descriptionText = document.createElement('p');
+                    descriptionText.classList.add('mt-2', 'text-sm', 'text-white');
+                    descriptionText.textContent = project.description[selectedLanguage];
+
+                    // Badges de tecnologias
+                    const badgesContainer = document.createElement('div');
+                    badgesContainer.classList.add('mt-2', 'flex', 'flex-wrap');
+
+                    project.technologies.forEach(tech => {
+                        const badge = document.createElement('span');
+                        badge.classList.add('border', 'border-white', 'text-white', 'text-xs', 'px-2', 'py-1', 'mr-2', 'mb-2', 'rounded');
+                        badge.textContent = tech;
+                        badgesContainer.appendChild(badge);
+                    });
+
+                    // Adicionar elementos ao projeto
+                    projectElement.appendChild(projectLink);
+                    projectElement.appendChild(descriptionText);
+                    projectElement.appendChild(badgesContainer);
+
+                    // Adicionar o projeto ao contêiner
+                    projectsContainer.appendChild(projectElement);
+                });
+            }
+
+            function fadeOut(element, callback) {
+                element.classList.add('opacity-0');
+                setTimeout(function () {
+                    if (callback) callback();
+                }, 500);
+            }
+
+            function fadeIn(element) {
+                setTimeout(function () {
+                    element.classList.remove('opacity-0');
+                }, 50);
+            }
+        });
+    </script>
+</body>
+
+</html>
